@@ -2,84 +2,82 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-class ProductRow extends React.Component {
-    render() {
-        const product = this.props.product;
-        const name = product.stocked ?
-            product.name :
-            <span style={{ color: 'red' }}>
-                {product.name}
-            </span>;
+const ProductRow = (props) => {
 
-        return (
-            <tr>
-                <td>{name}</td>
-                <td></td>
-                <td>{product.price}</td>
-            </tr>
-        );
-    }
+    const product = props.product;
+    const name = product.stocked ?
+        product.name :
+        <span style={{ color: 'red' }}>
+            {product.name}
+        </span>;
+
+    return (
+        <tr>
+            <td>{name}</td>
+            <td></td>
+            <td>{product.price}</td>
+        </tr>
+    );
 }
 
-class ProductCategoryRow extends React.Component {
-    render() {
-        const category = this.props.category;
-        return (
-            <tr>
-                <th colSpan="2">
-                    {category}
-                </th>
-            </tr>
-        );
-    }
+const ProductCategoryRow = (props) => {
+
+    const category = props.category;
+    return (
+        <tr>
+            <th colSpan="2">
+                {category}
+            </th>
+        </tr>
+    );
 }
 
-class ProductTable extends React.Component {
 
-    render() {
-        const filterText = this.props.filterText
-        const inStock = this.props.inStock
+const ProductTable = (props) => {
 
-        const rows = [];
-        let lastCategory = null;
+    const filterText = props.filterText
+    const inStock = props.inStock
+
+    const rows = [];
+    let lastCategory = null;
 
 
-        this.props.products.forEach((product) => {
-            if (product.name.indexOf(filterText) === -1) {
-                return;
-            }
-            if (inStock && !product.stocked) {
-                return;
-            }
-            if (product.category !== lastCategory) {
-                rows.push(
-                    <ProductCategoryRow
-                        category={product.category}
-                        key={product.category} />
-                );
-            }
+    props.products.forEach((product) => {
+        if (product.name.indexOf(filterText) === -1) {
+            return;
+        }
+        if (inStock && !product.stocked) {
+            return;
+        }
+        if (product.category !== lastCategory) {
             rows.push(
-                <ProductRow
-                    product={product}
-                    key={product.name} />
+                <ProductCategoryRow
+                    category={product.category}
+                    key={product.category} />
             );
-            lastCategory = product.category;
-        });
-
-        return (
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>s</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </table>
+        }
+        rows.push(
+            <ProductRow
+                product={product}
+                key={product.name} />
         );
-    }
+        lastCategory = product.category;
+    });
+
+    return (
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+        </table>
+    );
 }
+
 
 
 class SearchBar extends React.Component {
